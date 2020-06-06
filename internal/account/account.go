@@ -21,14 +21,18 @@ func createAccount(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, "Erro nos dados de account recebidos!")
 	}
 
-	if err := database.InsertAccount(account.DocNumber); err != nil {
+	ID, err := database.InsertAccount(account.DocNumber)
+	if err != nil {
 		return c.JSON(http.StatusBadRequest, &echo.HTTPError{
 			Code:    http.StatusBadRequest,
 			Message: fmt.Sprintln("Erro ao tentar inserir os dados da conta", err),
 		})
 	}
 
-	return c.JSON(http.StatusOK, "Sucesso")
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"ID":      ID,
+		"Message": "Sucesso",
+	})
 }
 
 func readAccount(c echo.Context) error {

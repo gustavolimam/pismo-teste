@@ -1,19 +1,19 @@
 package database
 
 import (
-	"fmt"
-
 	"github.com/gustavolimam/pismo-teste/types"
 )
 
 // InsertAccount query to insert account data on database
-func InsertAccount(docNumber string) error {
-	fmt.Println("Teste", db)
-	_, err := db.Exec("INSERT INTO `account` (`document_number`) VALUES (?);", docNumber)
+func InsertAccount(docNumber string) (int64, error) {
+	res, err := db.Exec("INSERT INTO `account` (`document_number`) VALUES (?); ", docNumber)
 
-	return err
+	id, _ := res.LastInsertId()
+
+	return id, err
 }
 
+// GetAccount query to return data for a specific account
 func GetAccount(accountID string) (*types.Account, error) {
 
 	account := new(types.Account)

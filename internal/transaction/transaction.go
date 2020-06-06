@@ -29,12 +29,16 @@ func createTransaction(c echo.Context) error {
 		tr.Amount = -tr.Amount
 	}
 
-	if err := database.InsertTransaction(*tr); err != nil {
+	ID, err := database.InsertTransaction(*tr)
+	if err != nil {
 		return c.JSON(http.StatusBadRequest, &echo.HTTPError{
 			Code:    http.StatusBadRequest,
 			Message: fmt.Sprintln("Erro ao tentar inserir os dados da transação", err),
 		})
 	}
 
-	return c.JSON(http.StatusOK, "Sucesso")
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"ID":      ID,
+		"Message": "Sucesso",
+	})
 }
