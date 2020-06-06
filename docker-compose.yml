@@ -1,0 +1,26 @@
+version: "3"
+
+services:
+  db:
+    image: mariadb:10.2
+    restart: always
+    environment:
+      - MYSQL_DATABASE=pismo
+      - MYSQL_USER=pismo
+      - MYSQL_PASSWORD=pismo123
+      - MYSQL_ROOT_PASSWORD=root
+    container_name: "pismo-db"
+    ports:
+      - "33306:3306"
+    volumes:
+      - ./dbinit.sql:/docker-entrypoint-initdb.d/dbinit.sql
+
+  pismo:
+    build:
+      context: .
+    restart: always
+    container_name: "pismo-ms"
+    ports:
+      - "3003:3003"
+    depends_on:
+      - db
